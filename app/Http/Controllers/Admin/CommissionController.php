@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\CommissionStatusChanged;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateCommissionStatusRequest;
 use App\Models\Commission;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -45,17 +47,18 @@ class CommissionController extends Controller
     /**
      * Update the status of a commission.
      */
-    public function updateStatus(Request $request, Commission $commission)
+    public function updateStatus(UpdateCommissionStatusRequest $request, Commission $commission)
     {
-        $validated = $request->validate([
-            'status' => ['required', 'in:pending,reviewing,accepted,in_progress,completed,cancelled,rejected'],
-            'admin_notes' => ['nullable', 'string'],
-        ]);
+        $validated = $request->validated();
+        $oldStatus = $commission->status;
 
         $commission->update([
             'status' => $validated['status'],
             'admin_notes' => $validated['admin_notes'] ?? $commission->admin_notes,
         ]);
+
+        // Dispatch event for status change tracking
+        event(new CommissionStatusChanged($commission, $oldStatus, $validated['status']));
 
         return back()->with('success', 'Commission status updated successfully.');
     }

@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreProjectRequest;
+use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class ProjectController extends Controller
@@ -29,28 +30,17 @@ class ProjectController extends Controller
     /**
      * Store a newly created project.
      */
-    public function store(Request $request)
+    public function store(StoreProjectRequest $request)
     {
-        $validated = $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
-            'image' => ['nullable', 'image', 'max:5120'], // max 5MB
-            'client_name' => ['nullable', 'string', 'max:255'],
-            'completion_date' => ['nullable', 'date'],
-            'project_url' => ['nullable', 'url', 'max:255'],
-            'order' => ['required', 'integer', 'min:0'],
-            'is_active' => ['boolean'],
-        ]);
-
-        $data = $validated;
-        $data['is_active'] = $request->has('is_active');
+        $validated = $request->validated();
+        $validated['is_active'] = $request->boolean('is_active');
 
         // Handle image upload
-        if ($request->hasFile('image')) {
-            $data['image_path'] = $request->file('image')->store('projects', 'public');
+        if ($request->hasFile('image_path')) {
+            $validated['image_path'] = $request->file('image_path')->store('projects', 'public');
         }
 
-        Project::create($data);
+        Project::create($validated);
 
         return redirect()->route('admin.projects.index')
             ->with('success', 'Project created successfully.');
@@ -75,32 +65,21 @@ class ProjectController extends Controller
     /**
      * Update the specified project.
      */
-    public function update(Request $request, Project $project)
+    public function update(UpdateProjectRequest $request, Project $project)
     {
-        $validated = $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
-            'image' => ['nullable', 'image', 'max:5120'],
-            'client_name' => ['nullable', 'string', 'max:255'],
-            'completion_date' => ['nullable', 'date'],
-            'project_url' => ['nullable', 'url', 'max:255'],
-            'order' => ['required', 'integer', 'min:0'],
-            'is_active' => ['boolean'],
-        ]);
-
-        $data = $validated;
-        $data['is_active'] = $request->has('is_active');
+        $validated = $request->validated();
+        $validated['is_active'] = $request->boolean('is_active');
 
         // Handle image upload
-        if ($request->hasFile('image')) {
+        if ($request->hasFile('image_path')) {
             // Delete old image
             if ($project->image_path) {
                 Storage::disk('public')->delete($project->image_path);
             }
-            $data['image_path'] = $request->file('image')->store('projects', 'public');
+            $validated['image_path'] = $request->file('image_path')->store('projects', 'public');
         }
 
-        $project->update($data);
+        $project->update($validated);
 
         return redirect()->route('admin.projects.index')
             ->with('success', 'Project updated successfully.');

@@ -17,9 +17,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// Commission Order Routes (Public)
-Route::get('/commissions', [CommissionOrderController::class, 'create'])->name('commissions.create');
-Route::post('/commissions', [CommissionOrderController::class, 'store'])->name('commissions.store');
+// Commission Order Routes (Requires Authentication)
+Route::middleware('auth')->group(function () {
+    Route::get('/commissions', [CommissionOrderController::class, 'create'])->name('commissions.create');
+    Route::post('/commissions', [CommissionOrderController::class, 'store'])->name('commissions.store');
+});
 
 // Authentication Routes
 Route::middleware('guest')->group(function () {

@@ -57,24 +57,24 @@
 
             <!-- Image -->
             <div>
-                <label for="image" class="block text-sm font-medium text-gray-700 mb-2">
+                <label for="image_path" class="block text-sm font-medium text-gray-700 mb-2">
                     Project Image
                 </label>
                 @if($project->image_path)
                     <div class="mb-3">
-                        <img src="{{ asset('storage/' . $project->image_path) }}" 
-                             alt="Current Image" 
+                        <img src="{{ asset('storage/' . $project->image_path) }}"
+                             alt="Current Image"
                              class="w-48 h-48 object-cover rounded-lg">
                     </div>
                 @endif
-                <input type="file" 
-                       id="image" 
-                       name="image" 
+                <input type="file"
+                       id="image_path"
+                       name="image_path"
                        accept="image/*"
                        onchange="previewImage(this)"
-                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0d328f] focus:border-transparent outline-none transition @error('image') border-red-500 @enderror">
-                <p class="mt-1 text-sm text-gray-500">Max size: 5MB. Accepted: JPG, PNG, GIF, WebP</p>
-                @error('image')
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#0d328f] focus:border-transparent outline-none transition @error('image_path') border-red-500 @enderror">
+                <p class="mt-1 text-sm text-gray-500">Max size: 2MB. Accepted: JPG, PNG, GIF, WebP</p>
+                @error('image_path')
                     <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                 @enderror
                 <div id="imagePreview" class="mt-3 hidden">

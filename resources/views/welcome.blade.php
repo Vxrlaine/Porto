@@ -12,10 +12,8 @@
         <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&family=Anton&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
         <!-- Styles / Scripts -->
-        @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-            @vite(['resources/css/app.css', 'resources/js/app.js'])
-        @else
-            <style>
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <style>
                 /* Base styles */
                 * {
                     margin: 0;
@@ -244,7 +242,6 @@
                     left: 50%;
                     top: 50%;
                     transform-origin: center center;
-                    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
                     border-radius: 1rem;
                     overflow: hidden;
                     cursor: pointer;
@@ -549,37 +546,54 @@
                     max-width: 90%;
                     max-height: 85vh;
                     display: flex;
+                    flex-direction: row;
+                    align-items: stretch;
+                    background: rgba(255, 255, 255, 0.05);
+                    border-radius: 12px;
+                    overflow: hidden;
+                }
+
+                .modal-info {
+                    flex: 1;
+                    padding: 3rem;
+                    display: flex;
                     flex-direction: column;
-                    align-items: center;
+                    justify-content: flex-start;
+                    min-width: 300px;
+                    max-width: 450px;
                 }
 
                 .modal-content img {
                     max-width: 100%;
-                    max-height: 75vh;
+                    max-height: 70vh;
                     object-fit: contain;
                     border-radius: 8px;
                     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
                 }
 
-                .modal-caption {
-                    text-align: center;
-                    color: white;
-                    margin-top: 1.5rem;
-                    max-width: 600px;
+                .modal-image-wrapper {
+                    flex: 1.5;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: rgba(0, 0, 0, 0.3);
+                    padding: 2rem;
                 }
 
                 .modal-title {
                     font-family: 'Anton', sans-serif;
-                    font-size: 2rem;
+                    font-size: 2.5rem;
                     letter-spacing: 0.05em;
-                    margin-bottom: 0.5rem;
+                    margin-bottom: 1.5rem;
                     color: #0d328f;
+                    text-align: left;
                 }
 
                 .modal-description {
-                    font-size: 1rem;
-                    line-height: 1.6;
-                    color: rgba(255, 255, 255, 0.8);
+                    font-size: 1.1rem;
+                    line-height: 1.8;
+                    color: rgba(255, 255, 255, 0.9);
+                    text-align: left;
                 }
 
                 .modal-counter {
@@ -620,13 +634,21 @@
                         right: 15px;
                     }
                     .modal-content {
+                        flex-direction: column;
                         max-width: 95%;
                     }
+                    .modal-info {
+                        padding: 2rem;
+                        max-width: 100%;
+                    }
+                    .modal-image-wrapper {
+                        padding: 1.5rem;
+                    }
                     .modal-title {
-                        font-size: 1.5rem;
+                        font-size: 1.8rem;
                     }
                     .modal-description {
-                        font-size: 0.9rem;
+                        font-size: 0.95rem;
                     }
                 }
 
@@ -706,8 +728,8 @@
                 @media (max-width: 768px) {
                     .header {
                         padding: 1.5rem 0 0;
-                        margin-bottom: -100px;
-                        min-height: 320px;
+                        margin-bottom: -140px;
+                        min-height: 300px;
                     }
                     .header-commission {
                         font-size: 0.9rem;
@@ -727,15 +749,15 @@
                         right: 0.2rem;
                     }
                     .header-body-image {
-                        height: 350px;
-                        top: 35%;
-                        clip-path: inset(0 0 35% 0);
+                        height: 320px;
+                        top: 42%;
+                        clip-path: inset(0 0 30% 0);
                     }
                     .header-note {
                         display: none;
                     }
                     .about-section {
-                        padding: 7rem 2rem 2.5rem;
+                        padding: 9rem 2rem 2.5rem;
                     }
                     .about-grid {
                         grid-template-columns: 1fr;
@@ -826,8 +848,8 @@
 
                 @media (max-width: 480px) {
                     .header {
-                        min-height: 260px;
-                        margin-bottom: -50px;
+                        min-height: 250px;
+                        margin-bottom: -120px;
                     }
                     .header-commission {
                         font-size: 0.75rem;
@@ -843,11 +865,12 @@
                         font-size: 2rem;
                     }
                     .header-body-image {
-                        height: 260px;
-                        top: 40%;
+                        height: 280px;
+                        top: 42%;
+                        clip-path: inset(0 0 30% 0);
                     }
                     .about-section {
-                        padding: 6rem 1.5rem 2rem;
+                        padding: 8rem 1.5rem 2rem;
                     }
                     .about-title {
                         font-size: 3rem;
@@ -943,7 +966,6 @@
                     }
                 }
             </style>
-        @endif
     </head>
     <body>
         <!-- Header Section -->
@@ -1032,10 +1054,12 @@
                 </svg>
             </button>
             <div class="modal-content">
-                <img src="" alt="Project" id="modalImage">
-                <div class="modal-caption" id="modalCaption">
+                <div class="modal-info">
                     <h3 class="modal-title"></h3>
                     <p class="modal-description"></p>
+                </div>
+                <div class="modal-image-wrapper">
+                    <img src="" alt="Project" id="modalImage">
                 </div>
             </div>
             <div class="modal-counter" id="modalCounter"></div>
@@ -1062,39 +1086,37 @@
         </section>
 
         <script>
-            // Carousel data - loaded from database
+            // Carousel data - loaded from projects database
             const carouselImages = [
-                @foreach($portfolioImages as $image)
+                @forelse($projects as $project)
                     {
-                        src: '{{ asset($image->image_path) }}',
-                        alt: '{{ $image->title ?? "Project" }}',
-                        title: '{{ $image->title ?? "" }}',
-                        description: '{{ $image->description ?? "" }}'
+                        src: '{{ $project->image_path ? asset('storage/' . $project->image_path) : '' }}',
+                        alt: '{{ $project->title }}',
+                        title: '{{ $project->title }}',
+                        description: '{{ Str::limit($project->description ?? "", 100) }}',
+                        url: '{{ $project->project_url ?? "" }}'
                     },
-                @endforeach
+                @empty
+                    // Fallback to portfolio images if no projects
+                    @foreach($portfolioImages as $image)
+                        {
+                            src: '{{ asset($image->image_path) }}',
+                            alt: '{{ $image->title ?? "Project" }}',
+                            title: '{{ $image->title ?? "" }}',
+                            description: '{{ $image->description ?? "" }}',
+                            url: ''
+                        },
+                    @endforeach
+                @endforelse
             ];
 
-            let currentIndex = Math.floor(carouselImages.length / 2); // Start with center card
-
-            function getPositionClass(index, current) {
-                const diff = index - current;
-                if (diff < -2) return 'position-2';
-                if (diff === -2) return 'position-2';
-                if (diff === -1) return 'position-1';
-                if (diff === 0) return 'position-0';
-                if (diff === 1) return 'position1';
-                if (diff === 2) return 'position2';
-                return 'position2';
-            }
+            let currentIndex = Math.floor(carouselImages.length / 2);
 
             function updateButtonStates() {
                 const prevBtn = document.getElementById('prevBtn');
                 const nextBtn = document.getElementById('nextBtn');
-                
-                // Disable prev button at first image
+
                 prevBtn.disabled = currentIndex === 0;
-                
-                // Disable next button at last image
                 nextBtn.disabled = currentIndex === carouselImages.length - 1;
             }
 
@@ -1102,48 +1124,61 @@
                 const carousel = document.getElementById('carousel');
                 carousel.innerHTML = '';
 
-                carouselImages.forEach((image, index) => {
-                    const card = document.createElement('div');
-                    card.className = `carousel-card ${getPositionClass(index, currentIndex)}`;
+                const startIdx = Math.max(0, currentIndex - 2);
+                const endIdx = Math.min(carouselImages.length - 1, currentIndex + 2);
 
-                    // Image container with placeholder support
-                    if (image.src) {
-                        card.innerHTML = `
-                            <img
-                                src="${image.src}"
-                                alt="${image.alt}"
-                                class="carousel-card-image"
-                                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-                            >
-                            <div class="carousel-card-placeholder" style="display:none;">
-                                <span>No Image</span>
-                            </div>
-                        `;
-                    } else {
-                        card.innerHTML = `
-                            <div class="carousel-card-placeholder">
-                                <span>Placeholder Image</span>
-                            </div>
-                        `;
-                    }
-
-                    // Click to bring to center or open modal if already center
-                    card.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        if (index === currentIndex) {
-                            // Already in center, open modal
-                            openModal(index);
-                        } else {
-                            currentIndex = index;
-                            renderCarousel();
-                        }
-                    });
-
+                for (let i = startIdx; i <= endIdx; i++) {
+                    const image = carouselImages[i];
+                    const card = createCard(image, i);
                     carousel.appendChild(card);
+                }
+
+                updateButtonStates();
+            }
+
+            function createCard(image, index) {
+                const card = document.createElement('div');
+                const position = index - currentIndex;
+                
+                let positionClass = 'position-0';
+                if (position === -2) positionClass = 'position-2';
+                else if (position === -1) positionClass = 'position-1';
+                else if (position === 1) positionClass = 'position1';
+                else if (position === 2) positionClass = 'position2';
+                
+                card.className = `carousel-card ${positionClass}`;
+
+                if (image.src) {
+                    card.innerHTML = `
+                        <img
+                            src="${image.src}"
+                            alt="${image.alt}"
+                            class="carousel-card-image"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                        >
+                        <div class="carousel-card-placeholder" style="display:none;">
+                            <span>No Image</span>
+                        </div>
+                    `;
+                } else {
+                    card.innerHTML = `
+                        <div class="carousel-card-placeholder">
+                            <span>Placeholder Image</span>
+                        </div>
+                    `;
+                }
+
+                card.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    if (index === currentIndex) {
+                        openModal(index);
+                    } else {
+                        currentIndex = index;
+                        renderCarousel();
+                    }
                 });
 
-                // Update button states after rendering
-                updateButtonStates();
+                return card;
             }
 
             function nextSlide() {
@@ -1217,8 +1252,7 @@
                 modalTitle.textContent = image.title || 'Project';
                 modalDescription.textContent = image.description || '';
                 modalCounter.textContent = `${modalCurrentIndex + 1} / ${carouselImages.length}`;
-                
-                // Disable/enable navigation buttons
+
                 modalPrev.style.opacity = modalCurrentIndex === 0 ? '0.3' : '1';
                 modalNext.style.opacity = modalCurrentIndex === carouselImages.length - 1 ? '0.3' : '1';
             }

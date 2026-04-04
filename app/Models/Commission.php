@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Commission extends Model
 {
+    use LogsActivity;
+
     protected $fillable = [
+        'user_id',
         'client_name',
         'client_email',
         'client_discord',
@@ -28,6 +32,14 @@ class Commission extends Model
         'deadline' => 'date',
         'reference_images' => 'array',
     ];
+
+    /**
+     * Get the user who created this commission.
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     /**
      * Get the admin user assigned to this commission.

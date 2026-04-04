@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreSkillRequest;
+use App\Http\Requests\UpdateSkillRequest;
 use App\Models\Skill;
-use Illuminate\Http\Request;
 
 class SkillController extends Controller
 {
@@ -28,20 +29,12 @@ class SkillController extends Controller
     /**
      * Store a newly created skill.
      */
-    public function store(Request $request)
+    public function store(StoreSkillRequest $request)
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'category' => ['nullable', 'string', 'max:100'],
-            'proficiency' => ['required', 'integer', 'min:0', 'max:100'],
-            'order' => ['required', 'integer', 'min:0'],
-            'is_active' => ['boolean'],
-        ]);
+        $validated = $request->validated();
+        $validated['is_active'] = $request->boolean('is_active');
 
-        $data = $validated;
-        $data['is_active'] = $request->has('is_active');
-
-        Skill::create($data);
+        Skill::create($validated);
 
         return redirect()->route('admin.skills.index')
             ->with('success', 'Skill created successfully.');
@@ -66,20 +59,12 @@ class SkillController extends Controller
     /**
      * Update the specified skill.
      */
-    public function update(Request $request, Skill $skill)
+    public function update(UpdateSkillRequest $request, Skill $skill)
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'category' => ['nullable', 'string', 'max:100'],
-            'proficiency' => ['required', 'integer', 'min:0', 'max:100'],
-            'order' => ['required', 'integer', 'min:0'],
-            'is_active' => ['boolean'],
-        ]);
+        $validated = $request->validated();
+        $validated['is_active'] = $request->boolean('is_active');
 
-        $data = $validated;
-        $data['is_active'] = $request->has('is_active');
-
-        $skill->update($data);
+        $skill->update($validated);
 
         return redirect()->route('admin.skills.index')
             ->with('success', 'Skill updated successfully.');
