@@ -47,4 +47,18 @@ class CommissionOrderController extends Controller
         return redirect()->route('commissions.create')
             ->with('success', 'Your commission order has been submitted successfully! We will contact you soon.');
     }
+
+    /**
+     * Show the commission status for the authenticated user.
+     */
+    public function status()
+    {
+        $user = auth()->user();
+
+        $commissions = Commission::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('commissions.status', compact('commissions'));
+    }
 }

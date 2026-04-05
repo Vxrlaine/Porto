@@ -24,7 +24,8 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        return view('admin.projects.form');
+        $project = new Project();
+        return view('admin.projects.form', compact('project'));
     }
 
     /**
@@ -34,6 +35,11 @@ class ProjectController extends Controller
     {
         $validated = $request->validated();
         $validated['is_active'] = $request->boolean('is_active');
+        
+        // Ensure order has a default value
+        if (!isset($validated['order'])) {
+            $validated['order'] = 0;
+        }
 
         // Handle image upload
         if ($request->hasFile('image_path')) {

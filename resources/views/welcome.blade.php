@@ -377,6 +377,98 @@
                     box-shadow: 0 12px 35px rgba(22, 163, 74, 0.5);
                 }
 
+                /* My Skills Section */
+                .skills-section {
+                    background: #FDFDFC;
+                    padding: 5rem 5% 4rem;
+                }
+
+                .skills-section-title {
+                    font-family: 'Dancing Script', cursive;
+                    font-size: 6.5rem;
+                    color: #2d3748;
+                    text-align: center;
+                    margin-bottom: 3rem;
+                }
+
+                .skills-container {
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+                    gap: 2.5rem;
+                }
+
+                .skill-category {
+                    background: white;
+                    padding: 2rem;
+                    border-radius: 1rem;
+                    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+                }
+
+                .skill-category-name {
+                    font-family: 'Anton', sans-serif;
+                    font-size: 1.8rem;
+                    letter-spacing: 0.05em;
+                    text-transform: uppercase;
+                    color: #0d328f;
+                    margin-bottom: 1.5rem;
+                    padding-bottom: 0.75rem;
+                    border-bottom: 3px solid #0d328f;
+                }
+
+                .skill-items {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1.25rem;
+                }
+
+                .skill-item {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.5rem;
+                }
+
+                .skill-info {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+
+                .skill-name {
+                    font-size: 1.05rem;
+                    font-weight: 500;
+                    color: #1b1b18;
+                }
+
+                .skill-percent {
+                    font-size: 0.95rem;
+                    font-weight: 600;
+                    color: #0d328f;
+                }
+
+                .skill-bar {
+                    width: 100%;
+                    height: 10px;
+                    background: #e0e0e0;
+                    border-radius: 10px;
+                    overflow: hidden;
+                }
+
+                .skill-bar-fill {
+                    height: 100%;
+                    background: linear-gradient(90deg, #0d328f, #1a4bb5);
+                    border-radius: 10px;
+                    transition: width 0.8s ease;
+                }
+
+                .skills-empty {
+                    text-align: center;
+                    padding: 3rem;
+                    color: #888;
+                    font-size: 1.1rem;
+                }
+
                 /* My Experience Section */
                 .experience-section {
                     background: #d8d8d8;
@@ -720,6 +812,16 @@
                     .carousel-nav-right {
                         right: 100px;
                     }
+                    .skills-section-title {
+                        font-size: 5.5rem;
+                    }
+                    .skills-container {
+                        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                        gap: 2rem;
+                    }
+                    .skill-category-name {
+                        font-size: 1.5rem;
+                    }
                     .experience-title {
                         font-size: 5.5rem;
                     }
@@ -791,6 +893,19 @@
                     .design-title,
                     .experience-title {
                         font-size: 4.5rem;
+                    }
+                    .skills-section-title {
+                        font-size: 4.5rem;
+                    }
+                    .skills-container {
+                        grid-template-columns: 1fr;
+                        gap: 1.5rem;
+                    }
+                    .skill-category {
+                        padding: 1.5rem;
+                    }
+                    .skill-category-name {
+                        font-size: 1.3rem;
                     }
                     .carousel-container {
                         height: 460px;
@@ -968,6 +1083,17 @@
             </style>
     </head>
     <body>
+        <!-- Simple Navigation -->
+        <nav style="position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: rgba(253, 253, 252, 0.95); backdrop-filter: blur(10px); padding: 1rem 2rem; display: flex; justify-content: flex-end; align-items: center; gap: 1rem; border-bottom: 1px solid rgba(0, 0, 0, 0.05);">
+            @auth
+                <a href="{{ route('commissions.status') }}" style="font-family: 'Instrument Sans', sans-serif; font-size: 0.95rem; color: #1b1b18; text-decoration: none; font-weight: 500; padding: 0.5rem 1.5rem; border: 2px solid #16a34a; border-radius: 2rem; transition: all 0.3s ease;"
+                   onmouseover="this.style.background='#16a34a'; this.style.color='white';"
+                   onmouseout="this.style.background='transparent'; this.style.color='#1b1b18';">
+                    MY COMMISSIONS
+                </a>
+            @endauth
+        </nav>
+
         <!-- Header Section -->
         <header class="header">
             <div class="header-commission">COMISSION</div>
@@ -994,8 +1120,8 @@
                     </p>
                 </div>
                 <div class="about-right">
-                    <img src="{{ asset('storage/images/whale.png') }}" 
-                         alt="About Illustration" 
+                    <img src="{{ asset('storage/projects/whale.png') }}"
+                         alt="About Illustration"
                          class="about-image"
                          onerror="this.style.display='none'">
                 </div>
@@ -1064,6 +1190,40 @@
             </div>
             <div class="modal-counter" id="modalCounter"></div>
         </div>
+
+        <!-- My Skills Section -->
+        <section class="skills-section">
+            <h2 class="skills-section-title">My Skills</h2>
+            <div class="skills-container">
+                @if($skills->isEmpty())
+                    <div class="skills-empty">
+                        <p>No skills added yet</p>
+                    </div>
+                @else
+                    @php
+                        $groupedSkills = $skills->groupBy('category');
+                    @endphp
+                    @foreach($groupedSkills as $category => $categorySkills)
+                        <div class="skill-category">
+                            <h3 class="skill-category-name">{{ $category ?? 'General' }}</h3>
+                            <div class="skill-items">
+                                @foreach($categorySkills as $skill)
+                                    <div class="skill-item">
+                                        <div class="skill-info">
+                                            <h4 class="skill-name">{{ $skill->name }}</h4>
+                                            <span class="skill-percent">{{ $skill->proficiency }}%</span>
+                                        </div>
+                                        <div class="skill-bar">
+                                            <div class="skill-bar-fill" style="width: {{ $skill->proficiency }}%"></div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endforeach
+                @endif
+            </div>
+        </section>
 
         <!-- My Experience Section -->
         <section class="experience-section">

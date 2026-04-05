@@ -51,16 +51,24 @@ class CommissionController extends Controller
     {
         $validated = $request->validated();
         $oldStatus = $commission->status;
+        $newStatus = $validated['status'];
 
-        $commission->update([
-            'status' => $validated['status'],
-            'admin_notes' => $validated['admin_notes'] ?? $commission->admin_notes,
-        ]);
+        try {
+            // Validate status transition using model logic
+            $commission->validateStatusTransition($newStatus);
 
-        // Dispatch event for status change tracking
-        event(new CommissionStatusChanged($commission, $oldStatus, $validated['status']));
+            $commission->update([
+                'status' => $newStatus,
+                'admin_notes' => $validated['admin_notes'] ?? $commission->admin_notes,
+            ]);
 
-        return back()->with('success', 'Commission status updated successfully.');
+            // Dispatch event for status change tracking
+            event(new CommissionStatusChanged($commission, $oldStatus, $newStatus));
+
+            return back()->with('success', 'Commission status updated successfully.');
+        } catch (\InvalidArgumentException $e) {
+            return back()->withErrors(['status' => $e->getMessage()])->withInput();
+        }
     }
 
     /**

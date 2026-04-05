@@ -28,7 +28,7 @@ class StoreProjectRequest extends FormRequest
             'client_name' => 'nullable|string|max:255',
             'completion_date' => 'nullable|date|before_or_equal:today',
             'project_url' => 'nullable|url|max:255',
-            'order' => 'nullable|integer|min:0',
+            'order' => 'required|integer|min:0',
             'is_active' => 'nullable|boolean',
         ];
     }

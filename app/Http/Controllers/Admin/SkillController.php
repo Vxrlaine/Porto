@@ -23,7 +23,8 @@ class SkillController extends Controller
      */
     public function create()
     {
-        return view('admin.skills.form');
+        $skill = new Skill();
+        return view('admin.skills.form', compact('skill'));
     }
 
     /**

@@ -23,6 +23,7 @@
                 <div class="flex items-center space-x-4">
                     <a href="{{ route('home') }}" class="text-gray-600 hover:text-[#0d328f] transition">Home</a>
                     @auth
+                        <a href="{{ route('commissions.status') }}" class="text-gray-600 hover:text-[#0d328f] transition">My Commissions</a>
                         @if(auth()->user()->is_admin)
                             <a href="{{ route('admin.dashboard') }}" class="bg-[#0d328f] text-white px-4 py-2 rounded-lg hover:bg-[#0a256b] transition">Admin</a>
                         @endif

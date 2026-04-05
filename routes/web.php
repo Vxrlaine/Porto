@@ -21,6 +21,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::middleware('auth')->group(function () {
     Route::get('/commissions', [CommissionOrderController::class, 'create'])->name('commissions.create');
     Route::post('/commissions', [CommissionOrderController::class, 'store'])->name('commissions.store');
+    Route::get('/commissions/status', [CommissionOrderController::class, 'status'])->name('commissions.status');
 });
 
 // Authentication Routes
